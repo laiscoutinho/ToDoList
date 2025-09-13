@@ -8,9 +8,17 @@ import com.google.firebase.FirebaseOptions;
 
 import java.io.FileInputStream;
 
+/**
+ * Configuração do Firebase para o backend.
+ * Inicializa a conexão com o Firebase usando credenciais do serviço.
+ */
 @Configuration
 public class FirebaseConfig {
 
+    /**
+     * Método executado após a criação do bean.
+     * Realiza a inicialização do Firebase com o arquivo de credenciais.
+     */
     @PostConstruct
     public void init() {
         try {

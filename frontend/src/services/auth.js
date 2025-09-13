@@ -1,5 +1,8 @@
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
+// Responsavel por definir todas as funções de requisições sobre autenticação.
+
+// Função para realizar login do usuário.
 export const loginUser = async (email, password) => {
   console.log("Login:", email, password);
   const res = await fetch(`${API_URL}/auth/login`, {
@@ -17,6 +20,8 @@ export const loginUser = async (email, password) => {
   return data;  
 };
 
+
+// Função para realizar cadastro do usuário.
 export const registerUser = async (email, password) => {
   console.log("Cadastro:", email, password);
   const res = await fetch(`${API_URL}/auth/register`, {
@@ -34,6 +39,7 @@ export const registerUser = async (email, password) => {
   return data; 
 };
 
+// Função para realizar "saida" do usuário.
 export const handleLogout = (navigate) => {
   localStorage.removeItem('idToken');
   navigate('/login');

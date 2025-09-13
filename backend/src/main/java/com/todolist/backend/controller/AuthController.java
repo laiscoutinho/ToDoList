@@ -18,15 +18,24 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
+/**
+ * Controlador responsável pelos endpoints de autenticação.
+ * Fornece funcionalidades de cadastro e login de usuários usando Firebase Authentication.
+ */
 @RestController
 @RequestMapping("/auth")
 @Tag(name = "Autenticação", description = "Endpoints para cadastro e login de usuários via Firebase")
 public class AuthController {
 
+    // API Key do Firebase para autenticação via REST
     @Value("${firebase.credentials.apikey}")
     private String apiKey;
 
     // ===================== CADASTRO =====================
+    /**
+     * Endpoint para cadastrar um novo usuário.
+     * Recebe email e senha, cria usuário no Firebase e retorna UID.
+     */
     @Operation(
             summary = "Cadastro de usuário",
             description = "Cria um novo usuário no Firebase Authentication.",
@@ -58,12 +67,14 @@ public class AuthController {
         }
 
         try {
+            // Cria o usuário no Firebase
             UserRecord.CreateRequest request = new UserRecord.CreateRequest()
                     .setEmail(body.getEmail())
                     .setPassword(body.getPassword());
 
             UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
 
+            // Retorna UID do usuário criado
             return ResponseEntity.ok(Map.of(
                     "success", "Usuário criado com sucesso",
                     "uid", userRecord.getUid()
@@ -78,6 +89,10 @@ public class AuthController {
     }
 
     // ===================== LOGIN =====================
+    /**
+     * Endpoint para login de usuário.
+     * Autentica email e senha no Firebase e retorna idToken e UID.
+     */
     @Operation(
             summary = "Login de usuário",
             description = "Autentica o usuário no Firebase e retorna um idToken e uid.",
@@ -102,6 +117,7 @@ public class AuthController {
         }
 
         try {
+            // Realiza login via Firebase REST API
             String url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + apiKey;
 
             RestTemplate rest = new RestTemplate();
@@ -121,6 +137,7 @@ public class AuthController {
             String idToken = (String) response.get("idToken");
             String uid = (String) response.get("localId");
 
+            // Retorna token e UID para o front-end
             return ResponseEntity.ok(Map.of(
                     "idToken", idToken,
                     "uid", uid

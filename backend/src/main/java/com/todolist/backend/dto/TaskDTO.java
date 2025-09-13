@@ -6,12 +6,14 @@ public class TaskDTO {
     private String id;
     private String title;
     private String description;
-    private Instant dateTime;
+    private Instant dateTime;   // data de criação
+    private Instant dueDate;    // prazo de conclusão
     private Boolean completed;
+    private String userId;
 
     public TaskDTO() {}
 
-    // Getters and Setters
+    // Getters e Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -24,6 +26,12 @@ public class TaskDTO {
     public Instant getDateTime() { return dateTime; }
     public void setDateTime(Instant dateTime) { this.dateTime = dateTime; }
 
+    public Instant getDueDate() { return dueDate; }
+    public void setDueDate(Instant dueDate) { this.dueDate = dueDate; }
+
     public Boolean getCompleted() { return completed; }
     public void setCompleted(Boolean completed) { this.completed = completed; }
+
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 }

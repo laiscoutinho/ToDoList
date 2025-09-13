@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Controlador responsável pelos endpoints de tarefas.
+ * Fornece operações CRUD sobre tarefas armazenadas no Firebase Firestore.
+ */
 @RestController
 @RequestMapping("/tarefas")
 @Tag(name = "Tarefas", description = "CRUD de tarefas no Firebase")
@@ -26,6 +30,9 @@ public class TaskController {
     }
 
     // ===================== LIST TASKS =====================
+    /**
+     * Retorna a lista de todas as tarefas de um usuário autenticado.
+     */
     @Operation(
             summary = "List all tasks for authenticated user",
             description = "Retrieves all tasks from Firebase Firestore for the currently authenticated user.",
@@ -43,6 +50,9 @@ public class TaskController {
     }
 
     // ===================== CREATE TASK =====================
+    /**
+     * Cria uma nova tarefa para o usuário autenticado.
+     */
     @Operation(
             summary = "Create a new task",
             description = "Creates a new task in Firebase Firestore for the authenticated user.",
@@ -67,6 +77,9 @@ public class TaskController {
     }
 
     // ===================== UPDATE TASK =====================
+    /**
+     * Atualiza uma tarefa existente no Firebase Firestore.
+     */
     @Operation(
             summary = "Update an existing task",
             description = "Updates an existing task in Firebase Firestore.",
@@ -91,6 +104,10 @@ public class TaskController {
     }
 
     // ===================== TOGGLE COMPLETED =====================
+    /**
+     * Alterna o status de conclusão de uma tarefa.
+     * Pode marcar como concluída ou não concluída.
+     */
     @Operation(
             summary = "Toggle task completion status",
             description = "Marks a task as completed or not completed.",
@@ -111,6 +128,9 @@ public class TaskController {
     }
 
     // ===================== DELETE TASK =====================
+    /**
+     * Deleta uma tarefa do Firebase Firestore.
+     */
     @Operation(
             summary = "Delete a task",
             description = "Deletes a task from Firebase Firestore.",

@@ -10,12 +10,20 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Serviço responsável pelas operações de CRUD de tarefas no Firebase Firestore.
+ * Cada método interage com a coleção "tasks" do Firestore.
+ */
 @Service
 public class TaskService {
 
-    private static final String COLLECTION = "tasks";
+    private static final String COLLECTION = "tasks"; // Nome da coleção de tarefas
 
-    // List all tasks for a user
+    /**
+     * Lista todas as tarefas de um usuário específico.
+     * @param userId ID do usuário
+     * @return Lista de tarefas do usuário
+     */
     public List<TaskDTO> listTasks(String userId) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         ApiFuture<QuerySnapshot> future = db.collection(COLLECTION)
@@ -31,13 +39,23 @@ public class TaskService {
         return tasks;
     }
 
-    // Create new task
+    /**
+     * Cria uma nova tarefa para o usuário.
+     * @param userId ID do usuário
+     * @param taskDTO Dados da tarefa
+     * @return Tarefa criada com ID definido
+     */
     public TaskDTO createTask(String userId, TaskDTO taskDTO) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
+
+        Instant creationDate = Instant.now();
+        taskDTO.setDateTime(creationDate);
+
         Map<String, Object> data = new HashMap<>();
         data.put("title", taskDTO.getTitle());
         data.put("description", taskDTO.getDescription());
-        data.put("dateTime", taskDTO.getDateTime() != null ? taskDTO.getDateTime() : Instant.now());
+        data.put("dateTime", creationDate); // data de criação
+        data.put("dueDate", taskDTO.getDueDate()); // prazo enviado pelo front
         data.put("completed", taskDTO.getCompleted() != null ? taskDTO.getCompleted() : false);
         data.put("userId", userId);
 
@@ -47,7 +65,12 @@ public class TaskService {
         return taskDTO;
     }
 
-    // Update existing task
+    /**
+     * Atualiza uma tarefa existente.
+     * @param id ID da tarefa
+     * @param taskDTO Dados atualizados da tarefa
+     * @return Tarefa atualizada
+     */
     public TaskDTO updateTask(String id, TaskDTO taskDTO) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         DocumentReference ref = db.collection(COLLECTION).document(id);
@@ -55,7 +78,7 @@ public class TaskService {
         Map<String, Object> updates = new HashMap<>();
         updates.put("title", taskDTO.getTitle());
         updates.put("description", taskDTO.getDescription());
-        updates.put("dateTime", taskDTO.getDateTime());
+        updates.put("dueDate", taskDTO.getDueDate()); // atualiza prazo
         updates.put("completed", taskDTO.getCompleted());
 
         ref.update(updates).get();
@@ -63,7 +86,11 @@ public class TaskService {
         return taskDTO;
     }
 
-    // Toggle completed
+    /**
+     * Alterna o status de conclusão de uma tarefa.
+     * @param id ID da tarefa
+     * @param completed Novo estado de conclusão
+     */
     public void toggleCompleted(String id, boolean completed) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         db.collection(COLLECTION).document(id)
@@ -71,7 +98,10 @@ public class TaskService {
                 .get();
     }
 
-    // Delete task
+    /**
+     * Deleta uma tarefa existente.
+     * @param id ID da tarefa
+     */
     public void deleteTask(String id) throws ExecutionException, InterruptedException {
         Firestore db = FirestoreClient.getFirestore();
         db.collection(COLLECTION).document(id).delete().get();

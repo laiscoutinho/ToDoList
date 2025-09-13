@@ -1,49 +1,40 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/auth";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
-export async function loginUser(email, password) {
-  try {
-    const { getAuth, signInWithEmailAndPassword } = await import("firebase/auth");
-    const auth = getAuth();
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const idToken = await userCredential.user.getIdToken();
+export const loginUser = async (email, password) => {
+  console.log("Login:", email, password);
+  const res = await fetch(`${API_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })  
+  });
 
-    const response = await fetch(`${API_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ idToken }),
-    });
+  const data = await res.json();
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Erro ao fazer login");
-    }
-
-    return await response.json();
-  } catch (err) {
-    throw err;
+  if (!res.ok) {
+    throw new Error(data.error || 'Erro no login');
   }
-}
 
-export async function registerUser(email, password) {
-  try {
-    const { getAuth, createUserWithEmailAndPassword } = await import("firebase/auth");
-    const auth = getAuth();
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const idToken = await userCredential.user.getIdToken();
+  return data;  
+};
 
-    const response = await fetch(`${API_URL}/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+export const registerUser = async (email, password) => {
+  console.log("Cadastro:", email, password);
+  const res = await fetch(`${API_URL}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }) 
+  });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Erro ao criar conta");
-    }
+  const data = await res.json();
 
-    return await response.json();
-  } catch (err) {
-    throw err;
+  if (!res.ok) {
+    throw new Error(data.error || 'Erro ao criar conta');
   }
-}
+
+  return data; 
+};
+
+export const handleLogout = (navigate) => {
+  localStorage.removeItem('idToken');
+  navigate('/login');
+};

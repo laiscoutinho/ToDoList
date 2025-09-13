@@ -9,7 +9,7 @@ const routes = [
   { path: '/login', element: <Login />, public: true },
   { path: '*', element: <Notfound />, public: true },
   {
-    path: '/app',
+    path: '/tasklist',
     element: (
       <ProtectedRoute>
         <TaskList />

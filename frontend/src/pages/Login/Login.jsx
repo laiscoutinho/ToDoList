@@ -1,19 +1,25 @@
 import { useState } from 'react';
 import { loginUser, registerUser } from '../../services/auth';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     setError('');
+    setSuccess('');
     setLoading(true);
     try {
       const data = await loginUser(email, password);
-      console.log("Login realizado:", data);
-      // TODO: salvar token ou redirecionar
+      setSuccess(data.success);
+      localStorage.setItem('uid', data.uid);
+      localStorage.setItem('idToken', data.idToken);
+      navigate('/tasklist');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -23,17 +29,18 @@ export default function Login() {
 
   const handleRegister = async () => {
     setError('');
+    setSuccess('');
     setLoading(true);
     try {
       const data = await registerUser(email, password);
-      console.log("Conta criada:", data);
-      // TODO: salvar token ou redirecionar
+      setSuccess(data.success);  
     } catch (err) {
-      setError(err.message);
+      setError(err.message);  
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
@@ -42,6 +49,7 @@ export default function Login() {
           <h2 className="card-title text-center mb-4">Entrar ou Criar Conta</h2>
 
           {error && <div className="alert alert-danger">{error}</div>}
+          {success && <div className="alert alert-success">{success}</div>}
 
           <div className="mb-3">
             <label className="form-label">E-mail</label>

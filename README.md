@@ -85,32 +85,37 @@ Cada tarefa terá os seguintes campos obrigatórios:
 git clone https://github.com/laiscoutinho/ToDoList.git
 ```
 
-2. Instalar dependências:
+2. Rodar o backend com Docker: 
+```bash
+ sudo docker build -t todolist-backend -f backend/Dockerfile .    
+ sudo docker run -p 8080:8080 todolist-backend
+```
+
+3. Configurar variáveis de ambiente :
+
+```
+FIREBASE_API_KEY=...
+FIREBASE_CREDENTIALS_PATH="/app/serviceAccountKey.json"
+```
+
+4. Instalar dependências do frontend:
 
 ```bash
+cd frontend/
 npm install
 ```
 
-3. Configurar variáveis de ambiente no `.env`:
-
-```
-VITE_FIREBASE_API_KEY=...
-VITE_FIREBASE_AUTH_DOMAIN=...
-VITE_FIREBASE_PROJECT_ID=...
-VITE_FIREBASE_STORAGE_BUCKET=...
-VITE_FIREBASE_MESSAGING_SENDER_ID=...
-VITE_FIREBASE_APP_ID=...
-```
-
-4. Rodar a aplicação:
+5. Rodar a aplicação:
 
 ```bash
 npm run dev
 ```
 
+Ou abrir [aqui](https://todolist-coutinho.web.app/).
+
 ---
 
 ## Observações
 
-* O projeto foi desenvolvido com foco em **boas práticas full-stack** e **responsividade**.
+* O projeto foi desenvolvido com foco em **boas práticas full-stack**.
 * Fique livre para fazer Pull-Requests e contribuir com o projeto!
